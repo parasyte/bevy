@@ -4,6 +4,7 @@
 
 |feature name|description|
 |-|-|
+|bevy_animation_rig|Skinned mesh support.|
 |bevy_audio|Audio support. Support for all audio formats depends on this.|
 |bevy_dynamic_plugin|Plugin for dynamic loading (libloading).|
 |bevy_gilrs|Adds gamepad support.|
