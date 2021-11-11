@@ -7,26 +7,26 @@ mod skinned_mesh;
 pub use skinned_mesh::*;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemLabel)]
-pub enum AnimationRigSystem {
+pub enum RigSystem {
     SkinnedMeshSetup,
     SkinnedMeshUpdate,
 }
 
 #[derive(Default)]
-pub struct AnimationRigPlugin;
+pub struct RigPlugin;
 
-impl Plugin for AnimationRigPlugin {
+impl Plugin for RigPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<SkinnedMesh>()
             .add_asset::<SkinnedMeshInverseBindposes>()
             .add_startup_system_to_stage(
                 StartupStage::PreStartup,
-                skinned_mesh_setup.label(AnimationRigSystem::SkinnedMeshSetup),
+                skinned_mesh_setup.label(RigSystem::SkinnedMeshSetup),
             )
             .add_system_to_stage(
                 CoreStage::PostUpdate,
                 skinned_mesh_update
-                    .label(AnimationRigSystem::SkinnedMeshUpdate)
+                    .label(RigSystem::SkinnedMeshUpdate)
                     .after(TransformSystem::TransformPropagate),
             );
     }

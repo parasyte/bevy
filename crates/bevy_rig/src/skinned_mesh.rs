@@ -43,7 +43,7 @@ pub const SKINNED_MESH_PIPELINE_HANDLE: HandleUntyped =
 ///
 /// # Example
 /// ```
-/// use bevy_animation_rig::{SkinnedMesh, SKINNED_MESH_PIPELINE_HANDLE};
+/// use bevy_rig::{SkinnedMesh, SKINNED_MESH_PIPELINE_HANDLE};
 /// use bevy_ecs::{entity::Entity, system::Commands};
 /// use bevy_pbr::prelude::PbrBundle;
 /// use bevy_render::pipeline::{RenderPipeline, RenderPipelines};
@@ -298,7 +298,7 @@ impl Struct for SkinnedMeshJoint {
 /// # Example
 /// ```
 /// use bevy_asset::Assets;
-/// use bevy_animation_rig::{SkinnedMesh, SkinnedMeshInverseBindposes, SKINNED_MESH_PIPELINE_HANDLE};
+/// use bevy_rig::{SkinnedMesh, SkinnedMeshInverseBindposes, SKINNED_MESH_PIPELINE_HANDLE};
 /// use bevy_ecs::{entity::Entity, system::{Commands, ResMut}};
 /// use bevy_math::Mat4;
 /// use bevy_pbr::prelude::PbrBundle;

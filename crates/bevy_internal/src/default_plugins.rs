@@ -47,6 +47,7 @@ use bevy_winit::WinitPlugin;
 /// * [`AudioPlugin`] - with feature `bevy_audio`
 /// * [`GilrsPlugin`] - with feature `bevy_gilrs`
 /// * [`GltfPlugin`] - with feature `bevy_gltf`
+/// * [`RigPlugin`] - with feature `bevy_rig`
 /// * [`WinitPlugin`] - with feature `bevy_winit`
 /// * [`WgpuPlugin`] - with feature `bevy_wgpu`
 pub struct DefaultPlugins;
@@ -61,9 +62,6 @@ impl PluginGroup for DefaultPlugins {
         group.add(WindowPlugin::default());
         group.add(AssetPlugin::default());
         group.add(ScenePlugin::default());
-
-        #[cfg(feature = "bevy_animation_rig")]
-        group.add(bevy_animation_rig::AnimationRigPlugin::default());
 
         #[cfg(feature = "bevy_render")]
         group.add(RenderPlugin::default());
@@ -88,6 +86,9 @@ impl PluginGroup for DefaultPlugins {
 
         #[cfg(feature = "bevy_gltf")]
         group.add(GltfPlugin::default());
+
+        #[cfg(feature = "bevy_rig")]
+        group.add(bevy_rig::RigPlugin::default());
 
         #[cfg(feature = "bevy_winit")]
         group.add(WinitPlugin::default());

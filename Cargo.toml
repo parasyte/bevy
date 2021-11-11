@@ -21,12 +21,12 @@ members = ["crates/*", "pipelined/*", "examples/ios", "tools/ci"]
 
 [features]
 default = [
-  "bevy_animation_rig",
   "bevy_audio",
   "bevy_core_pipeline",
   "bevy_dynamic_plugin",
   "bevy_gilrs",
   "bevy_gltf2",
+  "bevy_rig",
   "bevy_wgpu",
   "bevy_sprite2",
   "bevy_render2",
@@ -52,11 +52,11 @@ render = [
 ]
 
 # Optional bevy crates
-bevy_animation_rig = ["bevy_internal/bevy_animation_rig"]
 bevy_audio = ["bevy_internal/bevy_audio"]
 bevy_dynamic_plugin = ["bevy_internal/bevy_dynamic_plugin"]
 bevy_gilrs = ["bevy_internal/bevy_gilrs"]
 bevy_gltf = ["bevy_internal/bevy_gltf"]
+bevy_rig = ["bevy_internal/bevy_rig"]
 bevy_wgpu = ["bevy_internal/bevy_wgpu"]
 bevy_winit = ["bevy_internal/bevy_winit"]
 

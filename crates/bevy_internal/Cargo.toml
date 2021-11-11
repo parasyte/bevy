@@ -65,7 +65,6 @@ bevy_utils = { path = "../bevy_utils", version = "0.5.0" }
 bevy_window = { path = "../bevy_window", version = "0.5.0" }
 bevy_tasks = { path = "../bevy_tasks", version = "0.5.0" }
 # bevy (optional)
-bevy_animation_rig = { path = "../bevy_animation_rig", optional = true, version = "0.5.0" }
 bevy_audio = { path = "../bevy_audio", optional = true, version = "0.5.0" }
 bevy_core_pipeline = { path = "../../pipelined/bevy_core_pipeline", optional = true, version = "0.5.0" }
 bevy_gltf = { path = "../bevy_gltf", optional = true, version = "0.5.0" }
@@ -74,6 +73,7 @@ bevy_pbr = { path = "../bevy_pbr", optional = true, version = "0.5.0" }
 bevy_pbr2 = { path = "../../pipelined/bevy_pbr2", optional = true, version = "0.5.0" }
 bevy_render = { path = "../bevy_render", optional = true, version = "0.5.0" }
 bevy_render2 = { path = "../../pipelined/bevy_render2", optional = true, version = "0.5.0" }
+bevy_rig = { path = "../bevy_rig", optional = true, version = "0.5.0" }
 bevy_dynamic_plugin = { path = "../bevy_dynamic_plugin", optional = true, version = "0.5.0" }
 bevy_sprite = { path = "../bevy_sprite", optional = true, version = "0.5.0" }
 bevy_sprite2 = { path = "../../pipelined/bevy_sprite2", optional = true, version = "0.5.0" }

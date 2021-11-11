@@ -1,12 +1,12 @@
 [package]
-name = "bevy_animation_rig"
+name = "bevy_rig"
 version = "0.5.0"
 edition = "2021"
-description = "Bevy Engine Animation Rigging System"
+description = "Bevy Engine Rigging and Mesh Skinning System"
 homepage = "https://bevyengine.org"
 repository = "https://github.com/bevyengine/bevy"
 license = "MIT OR Apache-2.0"
-keywords = ["bevy", "animation", "rig", "skeleton"]
+keywords = ["bevy", "animation", "rig", "skeleton", "skinning"]
 
 [dependencies]
 # bevy

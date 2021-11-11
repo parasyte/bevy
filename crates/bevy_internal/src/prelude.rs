@@ -8,16 +8,16 @@ pub use crate::{
 pub use bevy_derive::bevy_main;
 
 #[doc(hidden)]
-#[cfg(feature = "bevy_animation_rig")]
-pub use crate::animation_rig::*;
-
-#[doc(hidden)]
 #[cfg(feature = "bevy_audio")]
 pub use crate::audio::prelude::*;
 
 #[doc(hidden)]
 #[cfg(feature = "bevy_pbr")]
 pub use crate::pbr::prelude::*;
+
+#[doc(hidden)]
+#[cfg(feature = "bevy_rig")]
+pub use crate::rig::*;
 
 #[doc(hidden)]
 #[cfg(feature = "bevy_render")]
