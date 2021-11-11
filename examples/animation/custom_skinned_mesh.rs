@@ -12,14 +12,14 @@ use bevy::{
 /// Skinned mesh example with mesh and joints data defined in code.
 /// Example taken from https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_019_SimpleSkin.md
 fn main() {
-    App::build()
+    App::new()
         .add_plugins(DefaultPlugins)
         .insert_resource(AmbientLight {
             brightness: 1.0,
             ..Default::default()
         })
-        .add_startup_system(setup.system())
-        .add_system(joint_animation.system())
+        .add_startup_system(setup)
+        .add_system(joint_animation)
         .run();
 }
 
