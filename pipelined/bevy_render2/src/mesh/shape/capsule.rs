@@ -366,6 +366,14 @@ impl From<Capsule> for Mesh {
         let vns: Vec<[f32; 3]> = vns.into_iter().map(Into::into).collect();
         let vts: Vec<[f32; 2]> = vts.into_iter().map(Into::into).collect();
 
+        let mut joint_weights: Vec<[f32; 4]> = Vec::with_capacity(vert_len);
+        let mut joint_indexes: Vec<[u32; 4]> = Vec::with_capacity(vert_len);
+
+        for _ in 0..vert_len {
+            joint_weights.push([1.0, 0.0, 0.0, 0.0]);
+            joint_indexes.push([0, 0, 0, 0]);
+        }
+
         assert_eq!(vs.len(), vert_len);
         assert_eq!(tris.len(), fs_len);
 
@@ -373,6 +381,8 @@ impl From<Capsule> for Mesh {
         mesh.set_attribute(Mesh::ATTRIBUTE_POSITION, vs);
         mesh.set_attribute(Mesh::ATTRIBUTE_NORMAL, vns);
         mesh.set_attribute(Mesh::ATTRIBUTE_UV_0, vts);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_WEIGHT, joint_weights);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_INDEX, joint_indexes);
         mesh.set_indices(Some(Indices::U32(tris)));
         mesh
     }

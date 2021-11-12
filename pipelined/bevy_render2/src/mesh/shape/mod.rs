@@ -93,11 +93,15 @@ impl From<Box> for Mesh {
         let mut positions = Vec::with_capacity(24);
         let mut normals = Vec::with_capacity(24);
         let mut uvs = Vec::with_capacity(24);
+        let mut joint_weights = Vec::<[f32; 4]>::with_capacity(24);
+        let mut joint_indexes = Vec::<[u32; 4]>::with_capacity(24);
 
         for (position, normal, uv) in vertices.iter() {
             positions.push(*position);
             normals.push(*normal);
             uvs.push(*uv);
+            joint_weights.push([1.0, 0.0, 0.0, 0.0]);
+            joint_indexes.push([0, 0, 0, 0]);
         }
 
         let indices = Indices::U32(vec![
@@ -113,6 +117,8 @@ impl From<Box> for Mesh {
         mesh.set_attribute(Mesh::ATTRIBUTE_POSITION, positions);
         mesh.set_attribute(Mesh::ATTRIBUTE_NORMAL, normals);
         mesh.set_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_WEIGHT, joint_weights);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_INDEX, joint_indexes);
         mesh.set_indices(Some(indices));
         mesh
     }
@@ -205,10 +211,14 @@ impl From<Quad> for Mesh {
         let mut positions = Vec::<[f32; 3]>::new();
         let mut normals = Vec::<[f32; 3]>::new();
         let mut uvs = Vec::<[f32; 2]>::new();
+        let mut joint_weights = Vec::<[f32; 4]>::with_capacity(4);
+        let mut joint_indexes = Vec::<[u32; 4]>::with_capacity(4);
         for (position, normal, uv) in vertices.iter() {
             positions.push(*position);
             normals.push(*normal);
             uvs.push(*uv);
+            joint_weights.push([1.0, 0.0, 0.0, 0.0]);
+            joint_indexes.push([0, 0, 0, 0]);
         }
 
         let mut mesh = Mesh::new(PrimitiveTopology::TriangleList);
@@ -216,6 +226,8 @@ impl From<Quad> for Mesh {
         mesh.set_attribute(Mesh::ATTRIBUTE_POSITION, positions);
         mesh.set_attribute(Mesh::ATTRIBUTE_NORMAL, normals);
         mesh.set_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_WEIGHT, joint_weights);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_INDEX, joint_indexes);
         mesh
     }
 }
@@ -249,10 +261,14 @@ impl From<Plane> for Mesh {
         let mut positions = Vec::new();
         let mut normals = Vec::new();
         let mut uvs = Vec::new();
+        let mut joint_weights = Vec::<[f32; 4]>::with_capacity(4);
+        let mut joint_indexes = Vec::<[u32; 4]>::with_capacity(4);
         for (position, normal, uv) in vertices.iter() {
             positions.push(*position);
             normals.push(*normal);
             uvs.push(*uv);
+            joint_weights.push([1.0, 0.0, 0.0, 0.0]);
+            joint_indexes.push([0, 0, 0, 0]);
         }
 
         let mut mesh = Mesh::new(PrimitiveTopology::TriangleList);
@@ -260,6 +276,8 @@ impl From<Plane> for Mesh {
         mesh.set_attribute(Mesh::ATTRIBUTE_POSITION, positions);
         mesh.set_attribute(Mesh::ATTRIBUTE_NORMAL, normals);
         mesh.set_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_WEIGHT, joint_weights);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_INDEX, joint_indexes);
         mesh
     }
 }

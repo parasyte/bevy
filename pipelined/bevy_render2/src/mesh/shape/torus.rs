@@ -31,6 +31,8 @@ impl From<Torus> for Mesh {
         let mut positions: Vec<[f32; 3]> = Vec::with_capacity(n_vertices);
         let mut normals: Vec<[f32; 3]> = Vec::with_capacity(n_vertices);
         let mut uvs: Vec<[f32; 2]> = Vec::with_capacity(n_vertices);
+        let mut joint_weights: Vec<[f32; 4]> = Vec::with_capacity(n_vertices);
+        let mut joint_indexes: Vec<[u32; 4]> = Vec::with_capacity(n_vertices);
 
         let segment_stride = 2.0 * std::f32::consts::PI / torus.subdivisions_segments as f32;
         let side_stride = 2.0 * std::f32::consts::PI / torus.subdivisions_sides as f32;
@@ -54,6 +56,8 @@ impl From<Torus> for Mesh {
                     segment as f32 / torus.subdivisions_segments as f32,
                     side as f32 / torus.subdivisions_sides as f32,
                 ]);
+                joint_weights.push([1.0, 0.0, 0.0, 0.0]);
+                joint_indexes.push([0, 0, 0, 0]);
             }
         }
 
@@ -87,6 +91,8 @@ impl From<Torus> for Mesh {
         mesh.set_attribute(Mesh::ATTRIBUTE_POSITION, positions);
         mesh.set_attribute(Mesh::ATTRIBUTE_NORMAL, normals);
         mesh.set_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_WEIGHT, joint_weights);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_INDEX, joint_indexes);
         mesh
     }
 }

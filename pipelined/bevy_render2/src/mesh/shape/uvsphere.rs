@@ -38,6 +38,8 @@ impl From<UVSphere> for Mesh {
         let mut vertices: Vec<[f32; 3]> = Vec::with_capacity(sphere.stacks * sphere.sectors);
         let mut normals: Vec<[f32; 3]> = Vec::with_capacity(sphere.stacks * sphere.sectors);
         let mut uvs: Vec<[f32; 2]> = Vec::with_capacity(sphere.stacks * sphere.sectors);
+        let mut joint_weights: Vec<[f32; 4]> = Vec::with_capacity(sphere.stacks * sphere.sectors);
+        let mut joint_indexes: Vec<[u32; 4]> = Vec::with_capacity(sphere.stacks * sphere.sectors);
         let mut indices: Vec<u32> = Vec::with_capacity(sphere.stacks * sphere.sectors * 2 * 3);
 
         for i in 0..sphere.stacks + 1 {
@@ -53,6 +55,8 @@ impl From<UVSphere> for Mesh {
                 vertices.push([x, y, z]);
                 normals.push([x * length_inv, y * length_inv, z * length_inv]);
                 uvs.push([(j as f32) / sectors, (i as f32) / stacks]);
+                joint_weights.push([1.0, 0.0, 0.0, 0.0]);
+                joint_indexes.push([0, 0, 0, 0]);
             }
         }
 
@@ -85,6 +89,8 @@ impl From<UVSphere> for Mesh {
         mesh.set_attribute(Mesh::ATTRIBUTE_POSITION, vertices);
         mesh.set_attribute(Mesh::ATTRIBUTE_NORMAL, normals);
         mesh.set_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_WEIGHT, joint_weights);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_INDEX, joint_indexes);
         mesh
     }
 }

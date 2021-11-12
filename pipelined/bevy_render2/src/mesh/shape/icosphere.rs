@@ -85,6 +85,14 @@ impl From<Icosphere> for Mesh {
 
         let uvs = generated.raw_data().to_owned();
 
+        let mut joint_weights = Vec::<[f32; 4]>::with_capacity(points.len());
+        let mut joint_indexes = Vec::<[u32; 4]>::with_capacity(points.len());
+
+        for _ in 0..points.len() {
+            joint_weights.push([1.0, 0.0, 0.0, 0.0]);
+            joint_indexes.push([0, 0, 0, 0]);
+        }
+
         let mut indices = Vec::with_capacity(generated.indices_per_main_triangle() * 20);
 
         for i in 0..20 {
@@ -98,6 +106,8 @@ impl From<Icosphere> for Mesh {
         mesh.set_attribute(Mesh::ATTRIBUTE_POSITION, points);
         mesh.set_attribute(Mesh::ATTRIBUTE_NORMAL, normals);
         mesh.set_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_WEIGHT, joint_weights);
+        mesh.set_attribute(Mesh::ATTRIBUTE_JOINT_INDEX, joint_indexes);
         mesh
     }
 }

@@ -34,7 +34,7 @@ use wgpu::{
 
 #[derive(AsStd140, Clone)]
 pub struct MeshUniform {
-    pub transform: Mat4,
+    pub transform: [Mat4; 4],
     pub inverse_transpose_model: Mat4,
     pub flags: u32,
 }
@@ -65,6 +65,7 @@ bitflags::bitflags! {
     }
 }
 
+#[allow(clippy::type_complexity)]
 pub fn extract_meshes(
     mut commands: Commands,
     mut previous_caster_len: Local<usize>,
@@ -95,7 +96,12 @@ pub fn extract_meshes(
         if !computed_visibility.is_visible {
             continue;
         }
-        let transform = transform.compute_matrix();
+        let transform = [
+            transform.compute_matrix(),
+            Mat4::IDENTITY,
+            Mat4::IDENTITY,
+            Mat4::IDENTITY,
+        ];
         caster_values.push((
             entity,
             (
@@ -107,7 +113,7 @@ pub fn extract_meshes(
                         MeshFlags::SHADOW_RECEIVER.bits
                     },
                     transform,
-                    inverse_transpose_model: transform.inverse().transpose(),
+                    inverse_transpose_model: transform[0].inverse().transpose(),
                 },
             ),
         ));
@@ -120,7 +126,12 @@ pub fn extract_meshes(
         if !computed_visibility.is_visible {
             continue;
         }
-        let transform = transform.compute_matrix();
+        let transform = [
+            transform.compute_matrix(),
+            Mat4::IDENTITY,
+            Mat4::IDENTITY,
+            Mat4::IDENTITY,
+        ];
         not_caster_values.push((
             entity,
             (
@@ -132,7 +143,7 @@ pub fn extract_meshes(
                         MeshFlags::SHADOW_RECEIVER.bits
                     },
                     transform,
-                    inverse_transpose_model: transform.inverse().transpose(),
+                    inverse_transpose_model: transform[0].inverse().transpose(),
                 },
                 NotShadowCaster,
             ),
@@ -360,7 +371,7 @@ impl FromWorld for PbrPipeline {
                     has_dynamic_offset: true,
                     // TODO: change this to MeshUniform::std140_size_static once crevice fixes this!
                     // Context: https://github.com/LPGhatguy/crevice/issues/29
-                    min_binding_size: BufferSize::new(144),
+                    min_binding_size: BufferSize::new(336),
                 },
                 count: None,
             }],
@@ -449,55 +460,81 @@ impl SpecializedPipeline for PbrPipeline {
         let (vertex_array_stride, vertex_attributes) =
             if key.contains(PbrPipelineKey::VERTEX_TANGENTS) {
                 (
-                    48,
+                    80,
+                    // (GOTCHA! Vertex attributes are sorted alphabetically)
                     vec![
-                        // Position (GOTCHA! Vertex_Position isn't first in the buffer due to how Mesh sorts attributes (alphabetically))
+                        // Position
                         VertexAttribute {
                             format: VertexFormat::Float32x3,
-                            offset: 12,
+                            offset: 44,
                             shader_location: 0,
                         },
                         // Normal
                         VertexAttribute {
                             format: VertexFormat::Float32x3,
-                            offset: 0,
-                            shader_location: 1,
-                        },
-                        // Uv (GOTCHA! uv is no longer third in the buffer due to how Mesh sorts attributes (alphabetically))
-                        VertexAttribute {
-                            format: VertexFormat::Float32x2,
-                            offset: 40,
-                            shader_location: 2,
-                        },
-                        // Tangent
-                        VertexAttribute {
-                            format: VertexFormat::Float32x4,
-                            offset: 24,
-                            shader_location: 3,
-                        },
-                    ],
-                )
-            } else {
-                (
-                    32,
-                    vec![
-                        // Position (GOTCHA! Vertex_Position isn't first in the buffer due to how Mesh sorts attributes (alphabetically))
-                        VertexAttribute {
-                            format: VertexFormat::Float32x3,
-                            offset: 12,
-                            shader_location: 0,
-                        },
-                        // Normal
-                        VertexAttribute {
-                            format: VertexFormat::Float32x3,
-                            offset: 0,
+                            offset: 32,
                             shader_location: 1,
                         },
                         // Uv
                         VertexAttribute {
                             format: VertexFormat::Float32x2,
-                            offset: 24,
+                            offset: 72,
                             shader_location: 2,
+                        },
+                        // JointWeight
+                        VertexAttribute {
+                            format: VertexFormat::Float32x4,
+                            offset: 16,
+                            shader_location: 3,
+                        },
+                        // JointIndex
+                        VertexAttribute {
+                            format: VertexFormat::Uint32x4,
+                            offset: 0,
+                            shader_location: 4,
+                        },
+                        // Tangent
+                        VertexAttribute {
+                            format: VertexFormat::Float32x4,
+                            offset: 56,
+                            shader_location: 5,
+                        },
+                    ],
+                )
+            } else {
+                (
+                    64,
+                    // (GOTCHA! Vertex attributes are sorted alphabetically)
+                    vec![
+                        // Position
+                        VertexAttribute {
+                            format: VertexFormat::Float32x3,
+                            offset: 44,
+                            shader_location: 0,
+                        },
+                        // Normal
+                        VertexAttribute {
+                            format: VertexFormat::Float32x3,
+                            offset: 32,
+                            shader_location: 1,
+                        },
+                        // Uv
+                        VertexAttribute {
+                            format: VertexFormat::Float32x2,
+                            offset: 56,
+                            shader_location: 2,
+                        },
+                        // JointWeight
+                        VertexAttribute {
+                            format: VertexFormat::Float32x4,
+                            offset: 16,
+                            shader_location: 3,
+                        },
+                        // JointIndex
+                        VertexAttribute {
+                            format: VertexFormat::Uint32x4,
+                            offset: 0,
+                            shader_location: 4,
                         },
                     ],
                 )
@@ -711,7 +748,7 @@ pub fn queue_meshes(
 
                     // NOTE: row 2 of the view matrix dotted with column 3 of the model matrix
                     // gives the z component of translation of the mesh in view space
-                    let mesh_z = view_row_2.dot(mesh_uniform.transform.col(3));
+                    let mesh_z = view_row_2.dot(mesh_uniform.transform[0].col(3));
                     // TODO: currently there is only "transparent phase". this should pick transparent vs opaque according to the mesh material
                     transparent_phase.add(Transparent3d {
                         entity: visible_entity.entity,

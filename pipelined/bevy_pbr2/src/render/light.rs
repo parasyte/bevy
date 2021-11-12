@@ -184,55 +184,81 @@ impl SpecializedPipeline for ShadowPipeline {
         let (vertex_array_stride, vertex_attributes) =
             if key.contains(ShadowPipelineKey::VERTEX_TANGENTS) {
                 (
-                    48,
+                    80,
+                    // (GOTCHA! Vertex attributes are sorted alphabetically)
                     vec![
-                        // Position (GOTCHA! Vertex_Position isn't first in the buffer due to how Mesh sorts attributes (alphabetically))
+                        // Position
                         VertexAttribute {
                             format: VertexFormat::Float32x3,
-                            offset: 12,
+                            offset: 44,
                             shader_location: 0,
                         },
                         // Normal
                         VertexAttribute {
                             format: VertexFormat::Float32x3,
-                            offset: 0,
-                            shader_location: 1,
-                        },
-                        // Uv (GOTCHA! uv is no longer third in the buffer due to how Mesh sorts attributes (alphabetically))
-                        VertexAttribute {
-                            format: VertexFormat::Float32x2,
-                            offset: 40,
-                            shader_location: 2,
-                        },
-                        // Tangent
-                        VertexAttribute {
-                            format: VertexFormat::Float32x4,
-                            offset: 24,
-                            shader_location: 3,
-                        },
-                    ],
-                )
-            } else {
-                (
-                    32,
-                    vec![
-                        // Position (GOTCHA! Vertex_Position isn't first in the buffer due to how Mesh sorts attributes (alphabetically))
-                        VertexAttribute {
-                            format: VertexFormat::Float32x3,
-                            offset: 12,
-                            shader_location: 0,
-                        },
-                        // Normal
-                        VertexAttribute {
-                            format: VertexFormat::Float32x3,
-                            offset: 0,
+                            offset: 32,
                             shader_location: 1,
                         },
                         // Uv
                         VertexAttribute {
                             format: VertexFormat::Float32x2,
-                            offset: 24,
+                            offset: 72,
                             shader_location: 2,
+                        },
+                        // JointWeight
+                        VertexAttribute {
+                            format: VertexFormat::Float32x4,
+                            offset: 16,
+                            shader_location: 3,
+                        },
+                        // JointIndex
+                        VertexAttribute {
+                            format: VertexFormat::Uint32x4,
+                            offset: 0,
+                            shader_location: 4,
+                        },
+                        // Tangent
+                        VertexAttribute {
+                            format: VertexFormat::Float32x4,
+                            offset: 56,
+                            shader_location: 5,
+                        },
+                    ],
+                )
+            } else {
+                (
+                    64,
+                    // (GOTCHA! Vertex attributes are sorted alphabetically)
+                    vec![
+                        // Position
+                        VertexAttribute {
+                            format: VertexFormat::Float32x3,
+                            offset: 44,
+                            shader_location: 0,
+                        },
+                        // Normal
+                        VertexAttribute {
+                            format: VertexFormat::Float32x3,
+                            offset: 32,
+                            shader_location: 1,
+                        },
+                        // Uv
+                        VertexAttribute {
+                            format: VertexFormat::Float32x2,
+                            offset: 56,
+                            shader_location: 2,
+                        },
+                        // JointWeight
+                        VertexAttribute {
+                            format: VertexFormat::Float32x4,
+                            offset: 16,
+                            shader_location: 3,
+                        },
+                        // JointIndex
+                        VertexAttribute {
+                            format: VertexFormat::Uint32x4,
+                            offset: 0,
+                            shader_location: 4,
                         },
                     ],
                 )

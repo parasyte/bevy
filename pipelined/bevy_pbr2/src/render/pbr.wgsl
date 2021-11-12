@@ -9,7 +9,7 @@ struct View {
 
 [[block]]
 struct Mesh {
-    model: mat4x4<f32>;
+    model: array<mat4x4<f32>, 4>;
     inverse_transpose_model: mat4x4<f32>;
     // 'flags' is a bit field indicating various options. u32 is 32 bits so we have up to 32 options.
     flags: u32;
@@ -26,8 +26,11 @@ struct Vertex {
     [[location(0)]] position: vec3<f32>;
     [[location(1)]] normal: vec3<f32>;
     [[location(2)]] uv: vec2<f32>;
+    // TODO: Specialization
+    [[location(3)]] joint_weight: vec4<f32>;
+    [[location(4)]] joint_index: vec4<u32>;
 #ifdef VERTEX_TANGENTS
-    [[location(3)]] tangent: vec4<f32>;
+    [[location(5)]] tangent: vec4<f32>;
 #endif
 };
 
@@ -43,7 +46,24 @@ struct VertexOutput {
 
 [[stage(vertex)]]
 fn vertex(vertex: Vertex) -> VertexOutput {
-    let world_position = mesh.model * vec4<f32>(vertex.position, 1.0);
+    // TODO: naga doesn't support `mat4x4 + mat4x4` operations.
+    // let model = mesh.model[vertex.joint_index.x] * vertex.joint_weight.x +
+    //     mesh.model[vertex.joint_index.y] * vertex.joint_weight.y +
+    //     mesh.model[vertex.joint_index.z] * vertex.joint_weight.z +
+    //     mesh.model[vertex.joint_index.w] * vertex.joint_weight.w;
+
+    var model_x = mesh.model[vertex.joint_index.x] * vertex.joint_weight.x;
+    var model_y = mesh.model[vertex.joint_index.y] * vertex.joint_weight.y;
+    var model_z = mesh.model[vertex.joint_index.z] * vertex.joint_weight.z;
+    var model_w = mesh.model[vertex.joint_index.w] * vertex.joint_weight.w;
+    let model = mat4x4<f32>(
+        model_x.x + model_y.x + model_z.x + model_w.x,
+        model_x.y + model_y.y + model_z.y + model_w.y,
+        model_x.z + model_y.z + model_z.z + model_w.z,
+        model_x.w + model_y.w + model_z.w + model_w.w,
+    );
+
+    let world_position = model * vec4<f32>(vertex.position, 1.0);
 
     var out: VertexOutput;
     out.uv = vertex.uv;
@@ -57,9 +77,9 @@ fn vertex(vertex: Vertex) -> VertexOutput {
 #ifdef VERTEX_TANGENTS
     out.world_tangent = vec4<f32>(
         mat3x3<f32>(
-            mesh.model.x.xyz,
-            mesh.model.y.xyz,
-            mesh.model.z.xyz
+            model.x.xyz,
+            model.y.xyz,
+            model.z.xyz
         ) * vertex.tangent.xyz,
         vertex.tangent.w
     );

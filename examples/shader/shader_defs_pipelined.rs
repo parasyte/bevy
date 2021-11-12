@@ -148,7 +148,7 @@ fn queue_custom(
                 entity,
                 pipeline,
                 draw_function: draw_custom,
-                distance: view_row_2.dot(mesh_uniform.transform.col(3)),
+                distance: view_row_2.dot(mesh_uniform.transform[0].col(3)),
             });
         }
     }
